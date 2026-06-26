@@ -25,7 +25,7 @@ const Registration = async (req, res) => {
             return res.status(422).json({ status: false, error: errors });
         }
 
-        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", data: e.stack || e });
+        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", data: e.message || e });
 
     }
 }
@@ -64,7 +64,7 @@ const Login = async (req, res) => {
             return res.status(422).json({ status: false, error: errors });
         }
 
-        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", data: e.stack || e });
+        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", data: e.message || e });
     }
 }
 

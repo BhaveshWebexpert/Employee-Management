@@ -14,6 +14,8 @@ router.post("/api/login", UserController.Login);
 router.post("/api/addEmp", EmployeeController.Addemployee);
 router.get("/api/getEmp", EmployeeController.getEmployeeList);
 router.get("/api/getEmp/:id", EmployeeController.getEmployee);
+router.get("/api/empfilter", EmployeeController.filterEmployee);
+router.get("/api/sortemp", EmployeeController.sortEmployee);
 router.put("/api/updateEmp/:id", EmployeeController.updateEmployee);
 router.delete("/api/deleteEmp/:id", EmployeeController.deleteEmployee);
 router.post("/api/search", EmployeeController.searchEmployee);

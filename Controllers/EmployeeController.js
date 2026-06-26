@@ -1,3 +1,4 @@
+import { request } from "http";
 import Employee from "../Models/Employee.js";
 
 const Addemployee = async (req,res)=>{
@@ -14,7 +15,7 @@ const Addemployee = async (req,res)=>{
             const errors = Object.values(e.errors).map((err) => err.message);
             return res.status(422).json({ status: false, error: errors });
         }
-        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", data: e.stack || e });
+        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", data: e.message || e });
     }
 };
 
@@ -34,7 +35,7 @@ const getEmployeeList = async (req,res)=>{
             const errors = Object.values(e.errors).map((err) => err.message);
             return res.status(422).json({ status: false, error: errors });
         }
-        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", error: e.stack || e });
+        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", error: e.message || e });
     }
 }
 
@@ -51,7 +52,7 @@ const getEmployee = async (req,res)=>{
             const errors = Object.values(e.errors).map((err) => err.message);
             return res.status(422).json({ status: false, error: errors });
         }
-        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", error: e.stack || e });
+        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", error: e.message || e });
     }
 }
 
@@ -140,7 +141,42 @@ const searchEmployee = async (req,res)=>{
             const errors = Object.values(e.errors).map((err) => err.message);
             return res.status(422).json({ status: false, error: errors });
         }
-        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", error: e.stack || e });
+        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", error: e.message || e });
+    }
+}
+
+const filterEmployee = async (req,res)=>{
+    try {
+        const department = req.query.department;
+        if (!department) return res.status(400).json({ status: false, message: "department query parameter is mendatory" });
+        const status = req.query.status === "false" ? false : true;
+
+        const empList = await Employee.find({department:department, status:status});
+
+        return res.status(200).json({ status: true, message: "Employees are fetched successfully..", data: empList});
+
+    } catch (e) {
+        console.log(`Error in filterEmployee from Usercontroller : ${e}`);
+        if (e.name === "ValidationError") {
+            const errors = Object.values(e.errors).map((err) => err.message);
+            return res.status(422).json({ status: false, error: errors });
+        }
+        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", error: e.message || e });
+    }
+}
+
+const sortEmployee = async (req,res)=>{
+    try {
+        const order = req.query.order === "desc" ? -1 : 1;
+        const empList = await Employee.find().sort({"dateOfJoining": order});
+        return res.status(200).json({ status: true, message: "Employees are sorted successfully..", data: empList});
+    } catch (e) {
+        console.log(`Error in sortEmployee from Usercontroller : ${e}`);
+        if (e.name === "ValidationError") {
+            const errors = Object.values(e.errors).map((err) => err.message);
+            return res.status(422).json({ status: false, error: errors });
+        }
+        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", error: e.message || e });
     }
 }
 
@@ -150,5 +186,7 @@ export default {
     getEmployee,
     updateEmployee,
     deleteEmployee,
-    searchEmployee
+    searchEmployee,
+    filterEmployee,
+    sortEmployee
 }
