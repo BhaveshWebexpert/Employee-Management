@@ -1,4 +1,3 @@
-import { request } from "http";
 import Employee from "../Models/Employee.js";
 
 const Addemployee = async (req,res)=>{
@@ -113,6 +112,7 @@ const deleteEmployee = async (req, res) => {
 
 const searchEmployee = async (req,res)=>{
     try {
+        console.log(Object.keys(req.body)[0]);
         switch (Object.keys(req.body)[0]) {
             case "fullName":
                 const key = Object.keys(req.body)[0].trim();
