@@ -104,10 +104,45 @@ const deleteEmployee = async (req, res) => {
     }
 };
 
+const searchEmployee = async (req,res)=>{
+    try {
+        switch (Object.keys(req.body)[0]) {
+            case "fullName":
+                const key = Object.keys(req.body)[0].trim();
+                const value = Object.values(req.body)[0].trim();
+                const emps = await Employee.find({ [key]: value });
+                if (!emps.length) {
+                    return res.status(404).json({ status: false, message: "Employee does not exists."});
+                }
+                return res.status(200).json({ status: true, message: "Employees are retrieved", data:emps });
+            break;
+            case "empCode":
+                const keys = Object.keys(req.body)[0].trim();
+                const values = Object.values(req.body)[0].trim();
+                const emp = await Employee.find({ [keys]: values });
+                if (!emp.length) {
+                    return res.status(404).json({ status: false, message: "Employee does not exists with this code."});
+                }
+                return res.status(200).json({ status: true, message: "Employees are retrieved", data:emp });
+                break;
+            default:
+                return res.status(400).json({ status: false, message: "Invalid search type entered." });
+        }
+    } catch (e) {
+        console.log(`Error in getEmployee from Usercontroller : ${e}`);
+        if (e.name === "ValidationError") {
+            const errors = Object.values(e.errors).map((err) => err.message);
+            return res.status(422).json({ status: false, error: errors });
+        }
+        return res.status(500).json({ status: false, error: "oops!something went wrong on server...", error: e.stack || e });
+    }
+}
+
 export default {
     Addemployee,
     getEmployeeList,
     getEmployee,
     updateEmployee,
-    deleteEmployee
+    deleteEmployee,
+    searchEmployee
 }

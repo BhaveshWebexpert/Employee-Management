@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const employeeSchema = mongoose.Schema({
-    empCode :{required:true, type:String, unique: true, default:generateEmpCode()},
+    empCode :{required:true, type:String, unique: true, default:generateEmpCode},
     fullName : {required:true, type:String,},
     email : {required:true, type:String, unique: true, validate:{
         validator: function(value){

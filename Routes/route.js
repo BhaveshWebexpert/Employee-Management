@@ -16,6 +16,7 @@ router.get("/api/getEmp", EmployeeController.getEmployeeList);
 router.get("/api/getEmp/:id", EmployeeController.getEmployee);
 router.put("/api/updateEmp/:id", EmployeeController.updateEmployee);
 router.delete("/api/deleteEmp/:id", EmployeeController.deleteEmployee);
+router.post("/api/search", EmployeeController.searchEmployee);
 
 
 export default router;
