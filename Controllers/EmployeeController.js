@@ -20,8 +20,14 @@ const Addemployee = async (req,res)=>{
 
 const getEmployeeList = async (req,res)=>{
     try {
-        const empList = await Employee.find();
-        return res.status(200).json({ status: true, message: "Employee list is fetched successfully...", data: empList });
+        const page = Math.max(parseInt(req.query.page) || 1);
+        const limit = Math.min(parseInt(req.query.limit) || 10);
+        const skip = (page - 1) * limit;
+        const total = await Employee.countDocuments();
+
+        const empList = await Employee.find().skip(skip).limit(limit);
+        
+        return res.status(200).json({ status: true, message: "Employee list is fetched successfully...", data: empList, currentPage:page, totalPages:Math.ceil(total/limit), totalItems:total });
     } catch (e) {
         console.log(`Error in getEmployee from Usercontroller : ${e}`);
         if (e.name === "ValidationError") {
